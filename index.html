@@ -217,6 +217,362 @@
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
-            }*
-
-
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="nav">
+                <a href="#" class="brand">
+                    <img src="logo.svg" alt="Nova">
+                    <span>NOVA</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#built-in">Games</a></li>
+                    <li><a href="#browse">Browse</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Play <span class="gradient">Amazing Games</span> Instantly</h1>
+                <p class="lead">No downloads. No signup. Just click and play. Lightning-fast gaming powered by premium design.</p>
+                <div class="buttons">
+                    <a href="#built-in" class="btn btn-primary">Play Now</a>
+                    <a href="#browse" class="btn btn-secondary">Browse Games</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="built-in">
+            <div class="container">
+                <h2>Built-In Games</h2>
+                <div class="games-grid">
+                    <div class="game-card" onclick="startGame('snake')">
+                        <div class="game-icon">🐍</div>
+                        <h3>Snake</h3>
+                        <p>Eat food and grow. Don't hit the walls or yourself!</p>
+                        <button class="btn btn-primary" style="width: 100%;">Play</button>
+                    </div>
+
+                    <div class="game-card" onclick="startGame('pong')">
+                        <div class="game-icon">🏓</div>
+                        <h3>Pong</h3>
+                        <p>Two-player paddle game. Keep the ball in play!</p>
+                        <button class="btn btn-primary" style="width: 100%;">Play</button>
+                    </div>
+
+                    <div class="game-card" onclick="startGame('flappy')">
+                        <div class="game-icon">🐦</div>
+                        <h3>Flappy Bird</h3>
+                        <p>Click to fly through obstacles!</p>
+                        <button class="btn btn-primary" style="width: 100%;">Play</button>
+                    </div>
+
+                    <div class="game-card" onclick="startGame('2048')">
+                        <div class="game-icon">🎰</div>
+                        <h3>2048</h3>
+                        <p>Slide tiles to reach 2048!</p>
+                        <button class="btn btn-primary" style="width: 100%;">Play</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="browse">
+            <div class="container">
+                <h2>Popular Games</h2>
+                <div class="games-grid">
+                    <div class="game-card">
+                        <div class="game-icon">🎮</div>
+                        <h3>Roblox</h3>
+                        <p>Create and play millions of games</p>
+                        <a href="https://www.roblox.com" target="_blank" class="btn btn-primary" style="width: 100%;">Launch</a>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-icon">🚀</div>
+                        <h3>Rocket Bot Royale</h3>
+                        <p>Battle royale with robots</p>
+                        <a href="https://www.play.geforcenow.com" target="_blank" class="btn btn-primary" style="width: 100%;">Launch</a>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-icon">⚔️</div>
+                        <h3>Fortnite</h3>
+                        <p>Battle royale action</p>
+                        <a href="https://www.fortnite.com" target="_blank" class="btn btn-primary" style="width: 100%;">Launch</a>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-icon">🃏</div>
+                        <h3>Among Us</h3>
+                        <p>Social deduction game</p>
+                        <a href="https://www.innersloth.com/games/among-us/" target="_blank" class="btn btn-primary" style="width: 100%;">Launch</a>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-icon">🎯</div>
+                        <h3>Agar.io</h3>
+                        <p>Multiplayer cell game</p>
+                        <a href="https://agar.io" target="_blank" class="btn btn-primary" style="width: 100%;">Launch</a>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-icon">🌍</div>
+                        <h3>Shell Shockers</h3>
+                        <p>Egg-based shooter</p>
+                        <a href="https://shellshock.io" target="_blank" class="btn btn-primary" style="width: 100%;">Launch</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 Nova Gaming Hub. Where gaming meets design.</p>
+        </div>
+    </footer>
+
+    <div class="game-modal" id="gameModal">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <p id="gameInfo" style="color: #a5b4cf; margin-bottom: 15px;"></p>
+        <button class="btn btn-secondary close-btn" onclick="closeGame()">Close Game</button>
+    </div>
+
+    <script>
+        let gameRunning = false;
+
+        function startGame(game) {
+            gameRunning = true;
+            document.getElementById('gameModal').classList.add('active');
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+
+            if (game === 'snake') playSnake(ctx, canvas);
+            else if (game === 'pong') playPong(ctx, canvas);
+            else if (game === 'flappy') playFlappy(ctx, canvas);
+            else if (game === '2048') play2048(ctx, canvas);
+        }
+
+        function closeGame() {
+            gameRunning = false;
+            document.getElementById('gameModal').classList.remove('active');
+        }
+
+        function playSnake(ctx, canvas) {
+            let snake = [{x: 50, y: 50}];
+            let food = {x: 150, y: 150};
+            let dx = 5, dy = 0, score = 0;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowUp' && dy === 0) {dy = -5; dx = 0;}
+                if (e.key === 'ArrowDown' && dy === 0) {dy = 5; dx = 0;}
+                if (e.key === 'ArrowLeft' && dx === 0) {dx = -5; dy = 0;}
+                if (e.key === 'ArrowRight' && dx === 0) {dx = 5; dy = 0;}
+            });
+
+            function gameLoop() {
+                ctx.fillStyle = '#050816';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#34d399';
+                snake.forEach(s => ctx.fillRect(s.x, s.y, 10, 10));
+
+                ctx.fillStyle = '#f87171';
+                ctx.fillRect(food.x, food.y, 10, 10);
+
+                const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+
+                if (head.x === food.x && head.y === food.y) {
+                    score++;
+                    food = {x: Math.random() * 780, y: Math.random() * 580};
+                } else {
+                    snake.pop();
+                }
+
+                if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+                    gameRunning = false;
+                }
+
+                snake.forEach(s => {
+                    if (head.x === s.x && head.y === s.y) gameRunning = false;
+                });
+
+                snake.unshift(head);
+                document.getElementById('gameInfo').textContent = `Score: ${score}`;
+
+                if (gameRunning) setTimeout(gameLoop, 100);
+            }
+
+            gameLoop();
+        }
+
+        function playPong(ctx, canvas) {
+            let pad1 = {x: 10, y: 250, w: 10, h: 100};
+            let pad2 = {x: 780, y: 250, w: 10, h: 100};
+            let ball = {x: 400, y: 300, r: 8, dx: 5, dy: 5};
+            let score1 = 0, score2 = 0;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'w') pad1.y = Math.max(0, pad1.y - 15);
+                if (e.key === 's') pad1.y = Math.min(500, pad1.y + 15);
+                if (e.key === 'ArrowUp') pad2.y = Math.max(0, pad2.y - 15);
+                if (e.key === 'ArrowDown') pad2.y = Math.min(500, pad2.y + 15);
+            });
+
+            function gameLoop() {
+                ctx.fillStyle = '#050816';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#60a5fa';
+                ctx.fillRect(pad1.x, pad1.y, pad1.w, pad1.h);
+                ctx.fillRect(pad2.x, pad2.y, pad2.w, pad2.h);
+
+                ctx.fillStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+                ctx.fill();
+
+                ball.x += ball.dx;
+                ball.y += ball.dy;
+
+                if (ball.y < 0 || ball.y > 600) ball.dy *= -1;
+
+                if (ball.x - ball.r < pad1.x + pad1.w && ball.y > pad1.y && ball.y < pad1.y + pad1.h) ball.dx *= -1;
+                if (ball.x + ball.r > pad2.x && ball.y > pad2.y && ball.y < pad2.y + pad2.h) ball.dx *= -1;
+
+                if (ball.x < 0) {score2++; ball = {x: 400, y: 300, r: 8, dx: 5, dy: 5};}
+                if (ball.x > 800) {score1++; ball = {x: 400, y: 300, r: 8, dx: -5, dy: 5};}
+
+                document.getElementById('gameInfo').textContent = `P1: ${score1} | P2: ${score2}`;
+
+                if (gameRunning) requestAnimationFrame(gameLoop);
+            }
+
+            gameLoop();
+        }
+
+        function playFlappy(ctx, canvas) {
+            let bird = {x: 50, y: 300, r: 8, vy: 0, g: 0.3};
+            let pipes = [], score = 0;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === ' ') bird.vy = -8;
+            });
+
+            canvas.addEventListener('click', () => {bird.vy = -8;});
+
+            function gameLoop() {
+                ctx.fillStyle = '#050816';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                bird.vy += bird.g;
+                bird.y += bird.vy;
+
+                ctx.fillStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.arc(bird.x, bird.y, bird.r, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (pipes.length === 0 || pipes[pipes.length - 1].x < 600) {
+                    pipes.push({x: 800, y: Math.random() * 400});
+                }
+
+                ctx.fillStyle = '#34d399';
+                pipes.forEach((p, i) => {
+                    p.x -= 5;
+                    ctx.fillRect(p.x, 0, 60, p.y);
+                    ctx.fillRect(p.x, p.y + 120, 60, 600);
+
+                    if (p.x + 60 < bird.x && !p.scored) {score++; p.scored = true;}
+                    if (bird.x + bird.r > p.x && bird.x - bird.r < p.x + 60) {
+                        if (bird.y - bird.r < p.y || bird.y + bird.r > p.y + 120) gameRunning = false;
+                    }
+                    if (p.x < -60) pipes.splice(i, 1);
+                });
+
+                if (bird.y > 600 || bird.y < 0) gameRunning = false;
+
+                document.getElementById('gameInfo').textContent = `Score: ${score}`;
+
+                if (gameRunning) requestAnimationFrame(gameLoop);
+            }
+
+            gameLoop();
+        }
+
+        function play2048(ctx, canvas) {
+            let grid = Array(4).fill().map(() => Array(4).fill(0));
+            let score = 0;
+
+            function addTile() {
+                let empty = [];
+                grid.forEach((r, i) => r.forEach((c, j) => {if (c === 0) empty.push({i, j});}));
+                if (empty.length > 0) {
+                    let {i, j} = empty[Math.floor(Math.random() * empty.length)];
+                    grid[i][j] = Math.random() < 0.9 ? 2 : 4;
+                }
+            }
+
+            addTile();
+            addTile();
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') move();
+            });
+
+            function move() {
+                grid.forEach(r => {
+                    let nr = r.filter(v => v !== 0);
+                    for (let i = 0; i < nr.length - 1; i++) {
+                        if (nr[i] === nr[i + 1]) {nr[i] *= 2; score += nr[i]; nr.splice(i + 1, 1);}
+                    }
+                    nr = nr.concat(Array(4 - nr.length).fill(0));
+                    grid[grid.indexOf(r)] = nr;
+                });
+                addTile();
+            }
+
+            function draw() {
+                ctx.fillStyle = '#050816';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                let colors = {0: '#1f2937', 2: '#60a5fa', 4: '#a78bfa', 8: '#06b6d4', 16: '#fbbf24'};
+                grid.forEach((r, i) => {
+                    r.forEach((c, j) => {
+                        let x = j * 150 + 25, y = i * 150 + 25;
+                        ctx.fillStyle = colors[c] || '#34d399';
+                        ctx.fillRect(x, y, 140, 140);
+                        if (c) {
+                            ctx.fillStyle = '#e2e8f0';
+                            ctx.font = '24px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(c, x + 70, y + 70);
+                        }
+                    });
+                });
+
+                document.getElementById('gameInfo').textContent = `Score: ${score}`;
+                if (gameRunning) requestAnimationFrame(draw);
+            }
+
+            draw();
+        }
+    </script>
+</body>
+</html>
